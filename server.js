@@ -10,7 +10,20 @@ const PORT = 5000;
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(session({ secret: 'seu-segredo-aqui', resave: false, saveUninitialized: true }));
+
+// Configuração de sessão otimizada para mobile
+app.set('trust proxy', 1);
+app.use(session({ 
+  secret: 'seu-segredo-aqui-mude-em-producao', 
+  resave: false, 
+  saveUninitialized: false,
+  cookie: { 
+    secure: false,
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000,
+    sameSite: 'lax'
+  }
+}));
 app.use(express.static('public'));
 
 // Banco de dados
