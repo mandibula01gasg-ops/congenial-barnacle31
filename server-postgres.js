@@ -18,11 +18,19 @@ const pool = new Pool({
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+// Configuração de sessão otimizada para mobile e produção
+app.set('trust proxy', 1);
 app.use(session({ 
   secret: process.env.SESSION_SECRET || 'seu-segredo-aqui-mude-em-producao', 
   resave: false, 
-  saveUninitialized: true,
-  cookie: { secure: process.env.NODE_ENV === 'production' }
+  saveUninitialized: false,
+  cookie: { 
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000,
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
+  }
 }));
 app.use(express.static('public'));
 
