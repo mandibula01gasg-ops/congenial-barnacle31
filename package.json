@@ -1,0 +1,27 @@
+{
+  "name": "cliente-cadastro",
+  "version": "2.0.0",
+  "description": "Sistema de cadastro de clientes - PostgreSQL otimizado",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "start:postgres": "node server-postgres.js",
+    "migrate": "node migrate-to-postgres.js",
+    "backup": "node backup.js",
+    "restore": "node restore.js",
+    "build": "echo 'No build needed for static files'"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
+    "dotenv": "^17.2.3",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.3.0",
+    "pg": "^8.16.3"
+  },
+  "devDependencies": {
+    "sqlite3": "^5.1.6"
+  }
+}

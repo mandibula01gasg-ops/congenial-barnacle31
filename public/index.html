@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Clientes</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="login" class="container">
+    <div class="card">
+      <h2>🔐 Área de Login</h2>
+      <form id="login-form">
+        <input type="text" id="username" name="username" placeholder="Usuário" required>
+        <input type="password" id="password" name="password" placeholder="Senha" required>
+        <button type="submit" class="btn">Entrar no Sistema</button>
+        <div id="login-error" style="display: none; color: #ff4757; margin-top: 10px;"></div>
+      </form>
+    </div>
+  </div>
+
+  <div id="app" class="container" style="display: none;">
+    <div class="card">
+      <h1>📋 Cadastro de Cliente - Quiz Interativo</h1>
+      
+      <div id="quiz-container">
+        <div class="quiz-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+          <p class="progress-text">Pergunta <span id="current-question">1</span> de <span id="total-questions">10</span></p>
+        </div>
+
+        <div class="quiz-content">
+          <div class="question-container" data-question="1">
+            <h3>📌 Qual é o nome completo do cliente?</h3>
+            <input type="text" id="nome" placeholder="Digite o nome completo" required>
+          </div>
+
+          <div class="question-container" data-question="2" style="display: none;">
+            <h3>📧 Quais são os e-mails do cliente?</h3>
+            <input type="text" id="emails" placeholder="Separe múltiplos e-mails com vírgula">
+          </div>
+
+          <div class="question-container" data-question="3" style="display: none;">
+            <h3>📍 Qual é o endereço completo?</h3>
+            <input type="text" id="endereco" placeholder="Rua, número, bairro, cidade, estado">
+          </div>
+
+          <div class="question-container" data-question="4" style="display: none;">
+            <h3>🛒 Quais foram os pedidos recentes?</h3>
+            <div id="pedidos-container">
+              <div class="dynamic-field-group">
+                <input type="text" class="pedido-input" placeholder="Digite o pedido">
+              </div>
+            </div>
+            <button type="button" class="btn-add-field" onclick="adicionarCampo('pedidos')">+ Adicionar outro pedido</button>
+          </div>
+
+          <div class="question-container" data-question="5" style="display: none;">
+            <h3>🛍️ O que tem no carrinho atual?</h3>
+            <div id="carrinho-container">
+              <div class="dynamic-field-group">
+                <input type="text" class="carrinho-input" placeholder="Digite o item do carrinho">
+              </div>
+            </div>
+            <button type="button" class="btn-add-field" onclick="adicionarCampo('carrinho')">+ Adicionar outro item</button>
+          </div>
+
+          <div class="question-container" data-question="6" style="display: none;">
+            <h3>💳 Quais são os cartões cadastrados?</h3>
+            <div id="cartao-container">
+              <div class="dynamic-field-group cartao-group">
+                <input type="text" class="cartao-input" placeholder="Últimos 4 dígitos ou tipo do cartão">
+                <input type="text" class="validade-input" placeholder="Validade (MM/AA)" maxlength="5" oninput="formatarValidade(this)">
+              </div>
+            </div>
+            <button type="button" class="btn-add-field" onclick="adicionarCampo('cartao')">+ Adicionar outro cartão</button>
+          </div>
+
+          <div class="question-container" data-question="7" style="display: none;">
+            <h3>⭐ Quais assinaturas o cliente possui?</h3>
+            <input type="text" id="assinaturas" placeholder="Planos e assinaturas ativas">
+          </div>
+
+          <div class="question-container" data-question="8" style="display: none;">
+            <h3>📱 Quais dispositivos estão cadastrados?</h3>
+            <div id="dispositivos-container">
+              <div class="dynamic-field-group dispositivo-group">
+                <input type="text" class="dispositivo-nome-input" placeholder="Nome do dispositivo">
+                <input type="text" class="dispositivo-serie-input" placeholder="Número de série">
+              </div>
+            </div>
+            <button type="button" class="btn-add-field" onclick="adicionarCampo('dispositivos')">+ Adicionar outro dispositivo</button>
+          </div>
+
+          <div class="question-container" data-question="9" style="display: none;">
+            <h3>💰 Informações de Pagamento</h3>
+            
+            <div class="payment-type-selector">
+              <label class="radio-option">
+                <input type="radio" name="tipo_pagamento" value="pix" id="radio-pix" onchange="mostrarCamposPagamento()">
+                <span>💳 PIX</span>
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="tipo_pagamento" value="vale-presente" id="radio-vale" onchange="mostrarCamposPagamento()">
+                <span>🎁 Vale-Presente</span>
+              </label>
+            </div>
+
+            <div id="campos-pagamento" style="display: none; margin-top: 20px;">
+              <input type="text" id="pedido" placeholder="Número do pedido" style="margin-bottom: 10px;">
+              <input type="number" id="valor_pedido" placeholder="Valor do pedido (R$)" step="0.01" min="0" style="margin-bottom: 10px;">
+              <input type="number" id="valor_vendido" placeholder="Valor vendido (R$)" step="0.01" min="0" style="margin-bottom: 10px;">
+              
+              <div id="status-vale-container" style="display: none; margin-top: 15px;">
+                <p style="color: #00b8d4; margin-bottom: 10px; font-weight: 500;">Status do Vale-Presente:</p>
+                <div class="status-buttons">
+                  <button type="button" class="btn-status btn-status-verde" id="btn-vale-na-conta" onclick="selecionarStatusVale('na_conta')">
+                    ✓ Na Conta
+                  </button>
+                  <button type="button" class="btn-status btn-status-vermelho" id="btn-vale-pendente" onclick="selecionarStatusVale('pendente')">
+                    ✗ Pendente
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <input type="number" id="vale" placeholder="Valor do vale (R$)" step="0.01" min="0" style="margin-top: 15px;">
+          </div>
+
+          <div class="question-container" data-question="10" style="display: none;">
+            <h3>📝 Informações extras sobre o cliente</h3>
+            <textarea id="extra" placeholder="Adicione quaisquer informações adicionais que sejam importantes sobre este cliente..." rows="5"></textarea>
+          </div>
+        </div>
+
+        <div class="quiz-navigation">
+          <button type="button" class="btn btn-secondary" id="btn-anterior" disabled>← Anterior</button>
+          <button type="button" class="btn" id="btn-proximo">Próximo →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>👥 Clientes Cadastrados</h2>
+      <ul id="lista-clientes"></ul>
+      <button onclick="fazerLogout()" class="btn logout">Sair do Sistema</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

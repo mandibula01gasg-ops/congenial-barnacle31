@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: cliente-cadastro
+    env: node
+    plan: starter
+    buildCommand: npm install
+    startCommand: node server-postgres.js
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: DEFAULT_PASSWORD
+        sync: false
+
+databases:
+  - name: cliente-cadastro-db
+    databaseName: cliente_cadastro
+    user: cliente_cadastro_user
+    plan: starter
