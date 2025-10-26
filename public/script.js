@@ -634,9 +634,11 @@ function criarElementoTexto(tag, texto) {
 }
 
 function carregarClientes() {
-  fetch('/clientes').then(res => res.json()).then(clientes => {
+  fetch('/clientes').then(res => res.json()).then(resultado => {
     const lista = document.getElementById('lista-clientes');
     lista.innerHTML = '';
+    
+    const clientes = Array.isArray(resultado) ? resultado : (resultado.clientes || []);
     
     if (clientes.length === 0) {
       const msg = document.createElement('div');
